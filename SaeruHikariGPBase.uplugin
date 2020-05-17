@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "SaeruHikariGPBase",
+	"Description": "Base module for gameplay dev,  including fsms, trees, etc.",
+	"Category": "Other",
+	"CreatedBy": "SaeruHikari",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "SaeruHikariGPBase",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
