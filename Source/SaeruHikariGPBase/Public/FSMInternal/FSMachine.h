@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "FSMachineState.h"
 
 template<typename NodeId, typename OpCode, typename FSMData>
@@ -25,11 +25,11 @@ struct FSMachine
 		return (nodes.Find(id) != nullptr);
 	}
 
-	bool Transition(OpCode operation, bool resetOnFail = true)
+	bool Command(OpCode operation, bool resetOnFail = true)
 	{
-		if (CurrentState.Get().Linkage(operation) != nullptr)
+		if (CurrentState->Linkage(operation) != nullptr)
 		{
-			CurrentState = CurrentState.Get().Linkage(operation);
+			CurrentState = CurrentState->Linkage(operation);
 			return true;
 		}
 		if (resetOnFail)
@@ -39,7 +39,7 @@ struct FSMachine
 
 	bool isFinished(void) const
 	{
-		return CurrentState.Get().isEnd();
+		return CurrentState->isEnd();
 	}
 
 	void Reset(void)
@@ -47,7 +47,7 @@ struct FSMachine
 		CurrentState = StartState;
 	}
 
-	void AddPath(NodeId src, OpCode operation, NodeId id, FSMData data)
+	void Link(NodeId src, OpCode operation, NodeId id, FSMData data)
 	{
 		check(nodes.Find(src) != nullptr);
 		StateType* srcState = nodes.Find(src)->Get();
@@ -55,7 +55,7 @@ struct FSMachine
 		{
 			// if existed state with the id found, add linkage directly.
 			StateType* state = nodes.Find(id)->Get();
-			srcState->AddPath(operation, state);
+			srcState->Link(operation, state);
 		}
 		else
 		{
@@ -63,16 +63,17 @@ struct FSMachine
 			auto newState = MakeUnique<StateType>(id, data);
 			newState.Get()->machine = this;
 			nodes.Add(newState.Get()->GetNodeId(), std::move(newState));
-			srcState->AddPath(operation, nodes.Find(id)->Get());
+			srcState->Link(operation, nodes.Find(id)->Get());
 		}
 	}
 
-	void AddPath(NodeId src, OpCode operation, NodeId id)
+	void Link(NodeId src, OpCode operation, NodeId id)
 	{
 		check(nodes.Find(src) != nullptr);
 		check(nodes.Find(id) != nullptr);
+        StateType* srcState = nodes.Find(src)->Get();
 		StateType* state = nodes.Find(id);
-		srcState->AddPath(operation, state);
+		srcState->Link(operation, state);
 	}
 
 	size_t GetStatesSize(void) const
@@ -89,7 +90,12 @@ struct FSMachine
 	{
 		return CurrentState;
 	}
-
+    
+    StateType* GetState(NodeId id)
+    {
+        return nodes.Find(id)->Get();
+    }
+    
 	void IslandState(NodeId id)
 	{
 		check(id != StartState->GetNodeId());

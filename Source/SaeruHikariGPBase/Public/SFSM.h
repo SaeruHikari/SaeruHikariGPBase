@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -17,11 +17,7 @@ struct FDefaultStateNode : public GuidMachineState
 	friend struct FDefaultStateNode;
 
 	FDefaultStateNode(FGuid guid);
-protected:
-	void _AddPath(FDefaultStateNode* target)
-	{
-		return AddPath(target->GetNodeId(), target);
-	}
+
 };
 
 struct DefaultStateMachine : public FSMachine<FGuid, FGuid, FGuid>
@@ -40,48 +36,59 @@ class SAERUHIKARIGPBASE_API USFSM : public UObject
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
 		void AddPath(FGuid src, FGuid target)
 	{
-		return machine.AddPath(src, target, target, target);
+		return machine.Link(src, target, target, target);
 	}
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
 		void IslandState(FGuid target)
 	{
 		return machine.IslandState(target);
 	}
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
 		int RemoveAllIslands()
 	{
 		return machine.RemoveAllIslands();
 	}
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure, Category = "SaeruHikari | FSM")
+    bool isFinished()
+    {
+        return machine.isFinished();
+    }
+    
+    UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
+    bool Command(FGuid command)
+    {
+        return machine.Command(command);
+    }
+    
+    UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
 		void RemoveStateSafely(FGuid target)
 	{
 		return machine.RemoveStateSafely(target);
 	}
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "SaeruHikari | FSM")
 		int GetCount()
 	{
 		return machine.GetStatesSize();
 	}
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "SaeruHikari | FSM")
 		FGuid GetStarterNode()
 	{
 		return machine.GetStartState()->GetNodeId();
 	}
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "SaeruHikari | FSM")
 		FGuid GetCurrentNode()
 	{
 		return machine.GetCurrentState()->GetNodeId();
 	}
 protected:
-	DefaultStateMachine machine
-		= DefaultStateMachine(MakeUnique<FDefaultStateNode>(FGuid::NewGuid()));
+    DefaultStateMachine machine{MakeUnique<FDefaultStateNode>(FGuid::NewGuid())};
 };

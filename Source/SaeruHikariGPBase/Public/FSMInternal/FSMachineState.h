@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 template<typename NodeId, typename OpCode, typename FSMData>
 struct FSMachine;
@@ -9,7 +9,7 @@ struct FSMachineState
 	friend struct FSMachine<NodeId, OpCode, FSMData>;
 
 	FSMachineState(NodeId _id, FSMData _data)
-		:id(_id), data(_data)
+		:data(_data), id(_id)
 	{
 
 	}
@@ -20,9 +20,9 @@ struct FSMachineState
 	}
 
 	// Check linkage with opCode.
-	auto Linkage(OpCode code)
+	FSMachineState* Linkage(OpCode code)
 	{
-		return paths.Find(code);
+		return *paths.Find(code);
 	}
 
 	void RemovePath(OpCode code)
@@ -38,7 +38,7 @@ struct FSMachineState
 
 	// Add path to a state which is not signed into the machine
 	// would cause problems.
-	void AddPath(OpCode code, FSMachineState* target)
+	void Link(OpCode code, FSMachineState* target)
 	{
 		check(machine->hasNode(target->GetNodeId()));
 		paths.Add(code, target);
