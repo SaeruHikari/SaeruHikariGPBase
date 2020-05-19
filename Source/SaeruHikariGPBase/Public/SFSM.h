@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -55,18 +55,18 @@ public:
 	}
 
 	UFUNCTION(BlueprintPure, Category = "SaeruHikari | FSM")
-    bool isFinished()
-    {
-        return machine.isFinished();
-    }
-    
-    UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
-    bool Command(FGuid command)
-    {
-        return machine.Command(command);
-    }
-    
-    UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
+		bool isFinished()
+	{
+		return machine.isFinished();
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
+		bool Command(FGuid command)
+	{
+		return machine.Command(command);
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "SaeruHikari | FSM")
 		void RemoveStateSafely(FGuid target)
 	{
 		return machine.RemoveStateSafely(target);
@@ -90,5 +90,5 @@ public:
 		return machine.GetCurrentState()->GetNodeId();
 	}
 protected:
-    DefaultStateMachine machine{MakeUnique<FDefaultStateNode>(FGuid::NewGuid())};
+	DefaultStateMachine machine{ MakeUnique<FDefaultStateNode>(FGuid::NewGuid()) };
 };
