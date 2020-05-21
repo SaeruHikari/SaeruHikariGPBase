@@ -1,11 +1,12 @@
-#pragma once
+﻿#pragma once
 #include "FSMachineState.h"
 
 template<typename NodeId, typename OpCode, typename FSMData>
 struct FSMachine
 {
 	using StateType = FSMachineState<NodeId, OpCode, FSMData>;
-
+	inline FSMachine(const FSMachine& rhs) = default;
+	inline FSMachine& operator=(const FSMachine& rhs) = default;
 	FSMachine(TUniquePtr<StateType> startState)
 	{
 		auto id = startState.Get()->GetNodeId();
@@ -71,8 +72,8 @@ struct FSMachine
 	{
 		check(nodes.Find(src) != nullptr);
 		check(nodes.Find(id) != nullptr);
-        StateType* srcState = nodes.Find(src)->Get();
-		StateType* state = nodes.Find(id);
+		StateType* srcState = nodes.Find(src)->Get();
+		StateType* state = nodes.Find(id)->Get();
 		srcState->Link(operation, state);
 	}
 
@@ -90,12 +91,12 @@ struct FSMachine
 	{
 		return CurrentState;
 	}
-    
-    StateType* GetState(NodeId id)
-    {
-        return nodes.Find(id)->Get();
-    }
-    
+
+	StateType* GetState(NodeId id)
+	{
+		return nodes.Find(id)->Get();
+	}
+
 	void IslandState(NodeId id)
 	{
 		check(id != StartState->GetNodeId());

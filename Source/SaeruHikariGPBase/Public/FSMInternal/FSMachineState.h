@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 template<typename NodeId, typename OpCode, typename FSMData>
 struct FSMachine;
@@ -22,7 +22,10 @@ struct FSMachineState
 	// Check linkage with opCode.
 	FSMachineState* Linkage(OpCode code)
 	{
-		return *paths.Find(code);
+		auto res = paths.Find(code);
+		if (res == nullptr)
+			return nullptr;
+		return *res;
 	}
 
 	void RemovePath(OpCode code)
