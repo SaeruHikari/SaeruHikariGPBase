@@ -7,6 +7,8 @@ struct FSMachine
 	using StateType = FSMachineState<NodeId, OpCode, FSMData>;
 	inline FSMachine(const FSMachine& rhs) = default;
 	inline FSMachine& operator=(const FSMachine& rhs) = default;
+public:
+
 	FSMachine(TUniquePtr<StateType> startState)
 	{
 		auto id = startState.Get()->GetNodeId();

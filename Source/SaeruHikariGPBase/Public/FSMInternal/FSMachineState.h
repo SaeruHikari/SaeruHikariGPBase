@@ -19,6 +19,12 @@ struct FSMachineState
 		return (paths.Num() == 0);
 	}
 
+	template<typename Func>
+	void ForEachPath(Func functor)
+	{
+		functor(paths);
+	}
+
 	// Check linkage with opCode.
 	FSMachineState* Linkage(OpCode code)
 	{
